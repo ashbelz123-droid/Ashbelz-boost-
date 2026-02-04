@@ -6,14 +6,14 @@ require('dotenv').config();
 // Required dependencies
 const express = require('express');
 const mongoose = require('mongoose');
-const path = require('path');  // For serving static assets
+const path = require('path'); // To handle static files
 const app = express();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
 // Serve static files (CSS, images, JS)
-app.use(express.static(path.join(__dirname, 'public')));  // Make sure the 'public' folder exists
+app.use(express.static(path.join(__dirname, 'public'))); // Serve from 'public' folder
 
 // MongoDB URI (from environment variables)
 const MONGO_URI = process.env.MONGO_URI;
@@ -39,8 +39,8 @@ app.get('/', (req, res) => {
       </head>
       <body>
         <h1>Welcome to ${process.env.SITE_NAME} 🚀</h1>
-        <p>Your SMM Panel is ready!</p>
-        <a href="/smm-panel">Go to SMM Panel</a>  <!-- Link to the SMM Panel -->
+        <p>Your SMM Panel is ready! Start managing your social media activities now.</p>
+        <a href="/smm-panel">Go to SMM Panel</a>  <!-- Link to SMM Panel -->
       </body>
     </html>
   `);
