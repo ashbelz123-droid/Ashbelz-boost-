@@ -7,14 +7,14 @@ node_modules/
 # Ignore log files
 *.log
 
-# Ignore build files
-/dist
+# Ignore build files (e.g., /dist folder)
+dist/
 
 # Ignore IDE-specific files (like VS Code)
 .vscode/
 
-# Ignore package-lock.json (if you prefer not to track it)
+# Ignore the package-lock.json (if you don't want to track it)
 package-lock.json
 
-# Ignore any temporary files
+# Ignore temporary files
 *.tmp
