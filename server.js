@@ -1,65 +1,92 @@
 // server.js
 
-require('dotenv').config();  // Load environment variables
+// Load environment variables
+require('dotenv').config();
+
+// Required dependencies
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
+const path = require('path');  // For serving static assets
 const app = express();
 
-// Serve static files from 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Middleware to parse requests
+// Middleware to parse JSON bodies
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// MongoDB connection setup
+// Serve static files (CSS, images, JS)
+app.use(express.static(path.join(__dirname, 'public')));  // Make sure the 'public' folder exists
+
+// MongoDB URI (from environment variables)
 const MONGO_URI = process.env.MONGO_URI;
-if (!MONGO_URI) {
-  console.error('❌ MONGO_URI is not set. Please provide it in the .env file.');
-} else {
-  mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('✅ MongoDB connected'))
-    .catch((err) => {
-      console.error('❌ Error connecting to MongoDB:', err.message);
-    });
-}
 
-// Route to serve the home page
+// Connect to MongoDB
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Successfully connected to MongoDB');
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
+    process.exit(1);  // Exit the process if DB connection fails
+  });
+
+// Route to check if the server is up
 app.get('/', (req, res) => {
   res.send(`
     <html>
       <head>
-        <title>AshMediaBoost</title>
-        <link rel="stylesheet" href="/css/style.css"> <!-- Linking CSS -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <title>${process.env.SITE_NAME}</title>
+        <link rel="stylesheet" href="/style.css">  <!-- Link to static CSS -->
       </head>
       <body>
-        <h1>Welcome to AshMediaBoost 🚀</h1>
+        <h1>Welcome to ${process.env.SITE_NAME} 🚀</h1>
         <p>Your SMM Panel is ready!</p>
-        <a href="/smm-panel">Go to SMM Panel</a>
+        <a href="/smm-panel">Go to SMM Panel</a>  <!-- Link to the SMM Panel -->
       </body>
     </html>
   `);
 });
 
-// Route to handle the SMM panel
+// Route to handle the SMM Panel
 app.get('/smm-panel', (req, res) => {
   res.send(`
     <html>
       <head>
-        <title>SMM Panel</title>
-        <link rel="stylesheet" href="/css/style.css"> <!-- Linking CSS -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <title>${process.env.SITE_NAME} - SMM Panel</title>
+        <link rel="stylesheet" href="/style.css">  <!-- Link to static CSS -->
       </head>
       <body>
         <h1>Welcome to the SMM Panel 🚀</h1>
         <p>Manage your Social Media Marketing activities here.</p>
+        <!-- Add more SMM Panel functionalities as needed -->
       </body>
     </html>
   `);
 });
 
-// Start the server
-const PORT = process.env.PORT || 3000;
+// Route to test the Pesapal connection (mock for now)
+app.get('/pesapal', (req, res) => {
+  const pesapalInfo = {
+    consumerKey: process.env.PESAPAL_CONSUMER_KEY,
+    consumerSecret: process.env.PESAPAL_CONSUMER_SECRET,
+    environment: process.env.PESAPAL_ENV,
+  };
+  
+  res.json(pesapalInfo);  // Return Pesapal info as a JSON response
+});
+
+// Route for Social Share API testing (mock for now)
+app.get('/socialshare', (req, res) => {
+  const socialShareInfo = {
+    apiKey: process.env.SOCIALSPHARE_API_KEY,
+    apiUrl: process.env.SOCIALSPHARE_API_URL,
+  };
+  
+  res.json(socialShareInfo);  // Return Social Share info as a JSON response
+});
+
+// Start the server on the specified port
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(`✅ AshMediaBoost server running on port ${PORT}`);
+  console.log(`${process.env.SITE_NAME} is running on port ${PORT}`);
 });
