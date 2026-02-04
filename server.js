@@ -6,7 +6,7 @@ require('dotenv').config();
 // Required dependencies
 const express = require('express');
 const mongoose = require('mongoose');
-const path = require('path'); // To handle static files
+const path = require('path'); // For static file serving
 const app = express();
 
 // Middleware to parse JSON bodies
@@ -25,7 +25,7 @@ mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   })
   .catch((err) => {
     console.error('Error connecting to MongoDB:', err);
-    process.exit(1);  // Exit the process if DB connection fails
+    process.exit(1); // Exit the process if DB connection fails
   });
 
 // Route to check if the server is up
